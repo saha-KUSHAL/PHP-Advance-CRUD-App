@@ -1,6 +1,7 @@
 <?php
-function store_data($conn, $name, $gender, $lang, $state, $email, $contact)
+function store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image)
 {
+    
     $langs = implode(",", $lang);
 //    echo $langs;
     $sql = "INSERT INTO `advance_crud`(`name`, `gender`, `lang`, `state`, `email`, `contact`) VALUES ('$name','$gender','$langs','$state','$email','$contact')";
@@ -32,4 +33,14 @@ function update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id
         echo "Error in insert query -> " . mysqli_error($conn);
     }
     header("location:index.php");
+}
+
+function store_image(array $image):mixed{
+    $dir = "images/";
+    $img_name = $image['name'];
+    $path = $dir.$img_name;
+    if(move_uploaded_file($image['tmp_name'], $path)){
+        return $path;
+    }
+    return false;
 }
