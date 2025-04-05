@@ -127,8 +127,8 @@ else
     </html>
 
 <?php
-//Handel the insert operation
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
+//Handel the update operation
+if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_GET['id'])) {
 //    echo "<pre>";
 //    print_r($_POST);
     $id = $_POST['id'];
@@ -141,6 +141,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (!empty($name) && !empty($email) && !empty($contact)) {
         update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id);
+        ?>
+        <script>
+            window.location.href="http://localhost/jphp21/PHP-Advance-CRUD-App/index.php"
+        </script>
+        <?php
     } else
         echo "Field values cannot be empty";
 }
