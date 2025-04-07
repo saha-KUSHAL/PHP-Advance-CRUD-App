@@ -1,7 +1,8 @@
 <?php
+session_start();
+ob_start();
 include("dbConnect.php");
 include("process.php");
-ob_start();
 // header("Cache-Control: no-cache, no-store, must-revalidate");
 // header("Pragma: no-cache");
 // header("Expires: 0");
@@ -20,6 +21,24 @@ ob_start();
     <div class="container text-center bg-dark text-light rounded col-lg-12 col-sm-12">
         <h1>Advance CRUD Application</h1>
     </div>
+
+    <!-- Alert for any activity -->
+    <?php
+    if (!empty($_SESSION)) {
+        // Handel errors
+        if (isset($_SESSION['error'])) {
+            echo '<div class="container alert alert-danger" role="alert">';
+            $errors = $_SESSION['error'];
+            foreach ($errors as $error) {
+                echo $error;
+                echo "<hr>";
+            }
+            echo '</div>';
+        }
+
+        session_destroy();
+    }
+    ?>
     <div class="container rounded border mb-3 mt-3">
         <form action="" method="post" enctype="multipart/form-data">
             <div class="row">
@@ -153,10 +172,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $errors = [];
     $name = trim(htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8') ?? '');
     $gender = htmlspecialchars($_POST['gender'], ENT_QUOTES, 'UTF-8') ?? '';
-    $lang =[];
-    $lang =[];
-    if(isset($_POST['lang']) && is_array($_POST['lang'])){
-        foreach($_POST['lang'] as $langs)
+    $lang = [];
+    if (isset($_POST['lang']) && is_array($_POST['lang'])) {
+        foreach ($_POST['lang'] as $langs)
             $lang[] = htmlspecialchars($langs, ENT_QUOTES, 'UTF-8') ?? '';
     }
 
@@ -203,8 +221,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image);
     } else {
         // Prints the error messages
-        foreach ($errors as $error)
-            echo "<p style='color:red;'>$error</p>";
+        $_SESSION['error'] = $errors;
+        header("location:index.php");
     }
 }
 //Handel the delete operation
