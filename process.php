@@ -1,24 +1,23 @@
 <?php
+session_start();
 function store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image)
 {
-    $path = store_image($image);
-    if ($path !== false) {
+    $image_path = store_image($image);
+    if ($image_path !== false) {
         $langs = implode(",", $lang);
         //    echo $langs;
         $sql = "INSERT INTO `advance_crud`(`name`, `gender`, `lang`, `state`, `email`, `contact`, `image`) VALUES ('$name','$gender','$langs','$state','$email','$contact', '$path')";
         $result = mysqli_query($conn, $sql);
 
         if (!$result) {
-            echo "Error in insert query -> " . mysqli_error($conn);
+            $_SESSION['error']= "Error in insert query -> " . mysqli_error($conn);
+            return false;
         }
-        header("location:index.php");
-        exit;
+        return true;
     } else {
-        echo "Image path cannot be generated";
-        echo $path;
+        $_SESSION['error']= "Image path cannot be generated | ".$image_path;
+        return false;
     }
-    header("location:index.php");
-    exit;
 }
 
 function delete_data($conn, $id)
