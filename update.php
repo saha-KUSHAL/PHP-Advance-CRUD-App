@@ -19,25 +19,30 @@ else
               integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
               crossorigin="anonymous">
     </head>
+
     <body>
-    <div class="container text-center bg-dark text-light rounded col-lg-4 col-sm-12"><h1>Update Details</h1>
+    <div class="container text-center bg-dark text-light rounded col-lg-4 col-sm-12">
+        <h1>Update Details</h1>
     </div>
     <div class="container rounded border mb-3 mt-3 col-lg-4 col-sm-12">
-        <form action="" method="post">
+        <form action="" method="post" enctype="multipart/form-data">
             <input type="hidden" value="<?php echo $row['id'] ?>" name="id">
+
+            <img src="<?php echo $row['image'] ?>" width="150px" height="150px" class="rounded d-block mt-3">
+            <label for="contact" class="form-label">Upload photo</label>
+            <input type="file" class="form-control" name="pic">
+
             <label for="name" class="form-label mt-3">Name</label>
             <input type="text" class="form-control mb-2" name="name" id="name" value="<?php echo $row['name'] ?>">
 
             <label for="gender" class="form-label me-3">Gender</label>
-            <input class="form-check-input" type="radio" name="gender"
-                   value="male" <?php if ($row['gender'] == "male") {
+            <input class="form-check-input" type="radio" name="gender" value="male" <?php if ($row['gender'] == "male") {
                 echo "checked";
             } ?>>
             <label class="form-check-label">
                 Male
             </label>
-            <input class="form-check-input" type="radio" name="gender"
-                   value="female"<?php if ($row['gender'] == "female") {
+            <input class="form-check-input" type="radio" name="gender" value="female" <?php if ($row['gender'] == "female") {
                 echo "checked";
             } ?>>
             <label class="form-check-label">
@@ -46,30 +51,26 @@ else
             <br>
 
             <label for="gender" class="form-label me-3">Languages</label>
-            <input class="form-check-input" type="checkbox" name="lang[]"
-                   value="c++" <?php if (strpos($row['lang'], "c++") !== false) {
+            <input class="form-check-input" type="checkbox" name="lang[]" value="c++" <?php if (strpos($row['lang'], "c++") !== false) {
                 echo "checked";
             } ?>>
             <label class="form-check-label">
                 C++
             </label>
 
-            <input class="form-check-input" type="checkbox" name="lang[]"
-                   value="py" <?php if (strpos($row['lang'], "py") !== false) {
+            <input class="form-check-input" type="checkbox" name="lang[]" value="py" <?php if (strpos($row['lang'], "py") !== false) {
                 echo "checked";
             } ?>>
             <label class="form-check-label">
                 Python
             </label>
-            <input class="form-check-input" type="checkbox" name="lang[]"
-                   value="java" <?php if (strpos($row['lang'], "java") !== false) {
+            <input class="form-check-input" type="checkbox" name="lang[]" value="java" <?php if (strpos($row['lang'], "java") !== false) {
                 echo "checked";
             } ?>>
             <label class="form-check-label">
                 Java
             </label>
-            <input class="form-check-input" type="checkbox" name="lang[]"
-                   value="rust" <?php if (strpos($row['lang'], "rust") !== false) {
+            <input class="form-check-input" type="checkbox" name="lang[]" value="rust" <?php if (strpos($row['lang'], "rust") !== false) {
                 echo "checked";
             } ?>>
             <label class="form-check-label">
@@ -124,6 +125,7 @@ else
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
     </body>
+
     </html>
 
 <?php

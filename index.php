@@ -94,6 +94,7 @@ ob_start();
             <thead class="table-dark">
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">Picture</th>
                     <th scope="col">Name</th>
                     <th scope="col">Gender</th>
                     <th scope="col">State</th>
@@ -111,6 +112,7 @@ ob_start();
                     ?>
                     <tr>
                         <th scope="row"><?php echo $row['id'] ?></th>
+                        <td><img src="<?php echo $row['image'] ?>" alt="Image of person" width="100px" height="100px"></td>
                         <td><?php echo $row['name'] ?></td>
                         <td><?php echo $row['gender'] ?></td>
                         <td><?php echo $row['state'] ?></td>
