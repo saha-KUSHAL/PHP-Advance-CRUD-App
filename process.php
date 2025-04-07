@@ -3,15 +3,15 @@ function store_data($conn, $name, $gender, $lang, $state, $email, $contact, $ima
 {
     $path = store_image($image);
     if ($path !== false) {
-    $langs = implode(",", $lang);
-//    echo $langs;
+        $langs = implode(",", $lang);
+        //    echo $langs;
         $sql = "INSERT INTO `advance_crud`(`name`, `gender`, `lang`, `state`, `email`, `contact`, `image`) VALUES ('$name','$gender','$langs','$state','$email','$contact', '$path')";
-    $result = mysqli_query($conn, $sql);
+        $result = mysqli_query($conn, $sql);
 
-    if (!$result) {
-        echo "Error in insert query -> " . mysqli_error($conn);
-    }
-    header("location:index.php");
+        if (!$result) {
+            echo "Error in insert query -> " . mysqli_error($conn);
+        }
+        header("location:index.php");
         exit;
     } else {
         echo "Image path cannot be generated";
@@ -33,10 +33,10 @@ function update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id
 {
     $path = store_image($image);
     $langs = implode(",", $lang);
-//    echo $langs;
+    //    echo $langs;
     $sql = "UPDATE `advance_crud` SET `name`='$name',`gender`='$gender',`lang`='$langs',`state`='$state',`email`='$email',`contact`='$contact',`image`='$path' WHERE id=$id";
 
-//    echo $sql;
+    //    echo $sql;
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {

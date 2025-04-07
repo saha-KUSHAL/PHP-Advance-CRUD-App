@@ -5,7 +5,7 @@ ob_start();
 // header("Cache-Control: no-cache, no-store, must-revalidate");
 // header("Pragma: no-cache");
 // header("Expires: 0");
-    ?>
+?>
 <html lang="en">
 
 <head>
@@ -151,12 +151,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
      */
 
     $errors = [];
-    $name = trim($_POST['name'] ?? '');
-    $gender = $_POST['gender'] ?? '';
-    $lang = $_POST['lang'] ?? '';
-    $state = $_POST['state'] ?? '';
-    $email = trim($_POST['email'] ?? '');
-    $contact = trim($_POST['contact'] ?? '');
+    $name = trim(htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8') ?? '');
+    $gender = htmlspecialchars($_POST['gender'], ENT_QUOTES, 'UTF-8') ?? '';
+    $lang =[];
+    $lang =[];
+    if(isset($_POST['lang']) && is_array($_POST['lang'])){
+        foreach($_POST['lang'] as $langs)
+            $lang[] = htmlspecialchars($langs, ENT_QUOTES, 'UTF-8') ?? '';
+    }
+
+    $state = htmlspecialchars($_POST['state'], ENT_QUOTES, 'UTF-8') ?? '';
+    $email = trim(htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8') ?? '');
+    $contact = trim(htmlspecialchars($_POST['contact'], ENT_QUOTES, 'UTF-8') ?? '');
     $image = [];
 
     // Validations
@@ -166,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $errors[] = "Invalid gender selected";
     if (empty($lang))
         $errors[] = "Select at least one language";
-    if (empty($state))
+    if (empty($state) || $state == "Select state")
         $errors[] = "Select at least one state";
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email";
@@ -177,28 +183,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     // File validation
     // check if pic is uploaded and no error is there
-    if(isset($_FILES['pic']) && $_FILES['pic']['error'] == UPLOAD_ERR_OK){
+    if (isset($_FILES['pic']) && $_FILES['pic']['error'] == UPLOAD_ERR_OK) {
         $image = $_FILES['pic'];
 
         // Size must be under 1mb
-        if($image['size'] > 1048576){
+        if ($image['size'] > 1048576) {
             $errors[] = "Image size must be under 1 mb";
         }
         // Check for image type
-        if(!in_array($image['type'], ['image/jpeg', 'image/png'])){
+        if (!in_array($image['type'], ['image/jpeg', 'image/png'])) {
             $errors = "Image type must be jpg, jpeg or png";
         }
-    }else{
-        $errors[]=  "Upload a picture or Error in upload";
+    } else {
+        $errors[] = "Upload a picture or Error in upload";
     }
 
     // Proceed insertion if only there is no error
-    if(empty($errors)){
+    if (empty($errors)) {
         store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image);
-    }else{
+    } else {
         // Prints the error messages
-        foreach($errors as $error)
-            echo htmlspecialchars("<p style='color:red;'>$error</p>");
+        foreach ($errors as $error)
+            echo "<p style='color:red;'>$error</p>";
     }
 }
 //Handel the delete operation
