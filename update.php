@@ -1,4 +1,5 @@
 <?php
+session_start();
 include("dbConnect.php");
 include("process.php");
 $id = $_GET['id'];
@@ -145,9 +146,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_GET['id'])) {
     $name = trim(htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8') ?? '');
     $gender = htmlspecialchars($_POST['gender'], ENT_QUOTES, 'UTF-8') ?? '';
 
-    $lang =[];
-    if(isset($_POST['lang']) && is_array($_POST['lang'])){
-        foreach($_POST['lang'] as $langs)
+    $lang = [];
+    if (isset($_POST['lang']) && is_array($_POST['lang'])) {
+        foreach ($_POST['lang'] as $langs)
             $lang[] = htmlspecialchars($langs, ENT_QUOTES, 'UTF-8') ?? '';
     }
 
@@ -155,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_GET['id'])) {
     $email = trim(htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8') ?? '');
     $contact = trim(htmlspecialchars($_POST['contact'], ENT_QUOTES, 'UTF-8') ?? '');
     $image = [];
-
+    $image_path = '';
     // Validations
     if (empty($name))
         $errors[] = "Name is required";
@@ -185,13 +186,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_GET['id'])) {
         if (!in_array($image['type'], ['image/jpeg', 'image/png'])) {
             $errors[] = "Image type must be jpg, jpeg or png";
         }
+    } else if (isset($row['image'])) {
+        $image_path = $row['image'];
     } else {
         $errors[] = "Upload a picture or Error in upload";
     }
 
     // Proceed insertion if only there is no error
     if (empty($errors)) {
-        update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id, $image);
+        // If Image update is not performed
+        if (empty($image_path))
+            $image_path = store_image($image);
+
+        update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id, $image_path);
+        $_SESSION['success'][] = "Data Updated Successfully";
     } else {
         // Prints the error messages
         foreach ($errors as $error)

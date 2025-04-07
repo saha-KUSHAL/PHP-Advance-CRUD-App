@@ -29,12 +29,11 @@ function delete_data($conn, $id)
     exit;
 }
 
-function update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id, $image)
+function update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id, $image_path)
 {
-    $path = store_image($image);
     $langs = implode(",", $lang);
     //    echo $langs;
-    $sql = "UPDATE `advance_crud` SET `name`='$name',`gender`='$gender',`lang`='$langs',`state`='$state',`email`='$email',`contact`='$contact',`image`='$path' WHERE id=$id";
+    $sql = "UPDATE `advance_crud` SET `name`='$name',`gender`='$gender',`lang`='$langs',`state`='$state',`email`='$email',`contact`='$contact',`image`='$image_path' WHERE id=$id";
 
     //    echo $sql;
     $result = mysqli_query($conn, $sql);
