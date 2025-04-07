@@ -1,6 +1,10 @@
 <?php
 include("dbConnect.php");
-include("process.php")
+include("process.php");
+ob_start();
+// header("Cache-Control: no-cache, no-store, must-revalidate");
+// header("Pragma: no-cache");
+// header("Expires: 0");
     ?>
 <html lang="en">
 
