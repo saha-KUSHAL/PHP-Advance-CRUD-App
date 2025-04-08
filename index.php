@@ -239,9 +239,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 //Handel the delete operation
 if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['id'])) {
     //    print_r($_GET);
-    if(delete_data($conn, $_GET['id'])){
+    if (delete_data($conn, $_GET['id'])) {
         $_SESSION['success'][] = "Data deleted successfully";
     }
-    header("location:index.php");
+    header("Refresh:0");
 }
 ?>
