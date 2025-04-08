@@ -6,7 +6,7 @@ function store_data($conn, $name, $gender, $lang, $state, $email, $contact, $ima
     if ($image_path !== false) {
         $langs = implode(",", $lang);
         //    echo $langs;
-        $sql = "INSERT INTO `advance_crud`(`name`, `gender`, `lang`, `state`, `email`, `contact`, `image`) VALUES ('$name','$gender','$langs','$state','$email','$contact', '$path')";
+        $sql = "INSERT INTO `advance_crud`(`name`, `gender`, `lang`, `state`, `email`, `contact`, `image`) VALUES ('$name','$gender','$langs','$state','$email','$contact', '$image_path')";
         $result = mysqli_query($conn, $sql);
 
         if (!$result) {
