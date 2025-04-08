@@ -122,7 +122,7 @@ else
                     echo "selected";
                 } ?>>Assam
                 </option>
-                <option value="J&K" <?php if ($row['state'] == "J&K") {
+                <option value="J&K" <?php if ($row['state'] == "J&amp;K") {
                     echo "selected";
                 } ?>>J&K
                 </option>
