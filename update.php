@@ -25,6 +25,22 @@ else
     <div class="container text-center bg-dark text-light rounded col-lg-4 col-sm-12">
         <h1>Update Details</h1>
     </div>
+    <!-- Alert for any activity -->
+    <?php
+    if (!empty($_SESSION)) {
+        // Handel errors
+        if (isset($_SESSION['update_error'])) {
+            echo '<div class="container alert alert-danger" role="alert">';
+            $errors = $_SESSION['update_error'];
+            foreach ($errors as $error) {
+                echo $error;
+                echo "<hr>";
+            }
+            echo '</div>';
+        }
+        unset($_SESSION['update_error']);
+    }
+    ?>
     <div class="container rounded border mb-3 mt-3 col-lg-4 col-sm-12">
         <form action="" method="post" enctype="multipart/form-data">
             <input type="hidden" value="<?php echo $row['id'] ?>" name="id">
@@ -203,9 +219,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_GET['id'])) {
             header("location: index.php");
         }
     } else {
-        // Prints the error messages
-        foreach ($errors as $error)
-            echo "<p style='color:red;'>$error</p>";
+        $_SESSION['update_error'] = $errors;
+        // Refresh if there is an error
+        header("Refresh:0");
     }
 }
 ?>
