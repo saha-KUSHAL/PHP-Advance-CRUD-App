@@ -23,9 +23,12 @@ function store_data($conn, $name, $gender, $lang, $state, $email, $contact, $ima
 function delete_data($conn, $id)
 {
     $sql = "DELETE FROM `advance_crud` WHERE id=$id";
-    mysqli_query($conn, $sql);
-    header("location:index.php");
-    exit;
+    $result = mysqli_query($conn, $sql);
+    if(!$result){
+        $_SESSION['error']= "Error while deleting record | ".mysqli_errno($conn);
+        return false;
+    }
+    return true;
 }
 
 function update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id, $image_path)
@@ -38,10 +41,10 @@ function update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id
     $result = mysqli_query($conn, $sql);
 
     if (!$result) {
-        echo "Error in insert query -> " . mysqli_error($conn);
+        $_SESSION['error'] = "Error in update query -> " . mysqli_error($conn);
+        return false;
     }
-    header("location:index.php");
-    exit;
+    return true;
 }
 
 function store_image(array $image): mixed
@@ -52,7 +55,7 @@ function store_image(array $image): mixed
         if (mkdir($dir, 0755, true)) {
             echo "Created directory $dir\n";
         } else {
-            echo "Directory $dir cannot be created\n";
+            $_SESSION['error'] = "Directory $dir cannot be created\n";
             return false;
         }
     }
