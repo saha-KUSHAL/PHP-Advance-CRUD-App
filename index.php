@@ -35,7 +35,16 @@ include("process.php");
             }
             echo '</div>';
         }
-
+        // Handel success messages
+        if (isset($_SESSION['success'])) {
+            echo '<div class="container alert alert-success" role="alert">';
+            $successes = $_SESSION['success'];
+            foreach ($successes as $success) {
+                echo $success;
+                echo "<hr>";
+            }
+            echo '</div>';
+        }
         session_destroy();
     }
     ?>
@@ -218,7 +227,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     // Proceed insertion if only there is no error
     if (empty($errors)) {
-        store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image);
+        if(store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image))
+            $_SESSION['success'][] = "Data Stored Successfully";
+        header("location:index.php");
     } else {
         // Prints the error messages
         $_SESSION['error'] = $errors;
