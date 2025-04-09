@@ -1,9 +1,15 @@
+# files
 phpinfo.txt
+test.php
+
+# folder
 .idea/
 .idea/php.xml
 .idea/prettier.xml
 .idea/vcs.xml
 .idea/inspectionProfiles/Project_Default.xml
 .idea/jsLinters/eslint.xml
-test.php
 .idea/.gitignore
+.vscode/
+cookies/display_cookies.php
+cookies/set_cookies.php

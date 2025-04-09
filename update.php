@@ -215,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_GET['id'])) {
             $image_path = store_image($image);
 
         if (update_data($conn, $name, $gender, $lang, $state, $email, $contact, $id, $image_path)) {
-        $_SESSION['success'][] = "Data Updated Successfully";
+            $_SESSION['success'][] = "Data Updated Successfully";
             header("location: index.php");
         }
     } else {

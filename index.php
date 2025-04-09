@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     // Proceed insertion if only there is no error
     if (empty($errors)) {
-        if(store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image))
+        if (store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image))
             $_SESSION['success'][] = "Data Stored Successfully";
         header("location:index.php");
     } else {
@@ -242,6 +242,6 @@ if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['id'])) {
     if (delete_data($conn, $_GET['id'])) {
         $_SESSION['success'][] = "Data deleted successfully";
     }
-    header("Refresh:0");
+    header("location:index.php");
 }
 ?>
