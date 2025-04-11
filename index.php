@@ -1,11 +1,12 @@
 <?php
-session_start();
-ob_start();
-include("dbConnect.php");
-include("process.php");
-// header("Cache-Control: no-cache, no-store, must-revalidate");
-// header("Pragma: no-cache");
-// header("Expires: 0");
+    session_start();
+    ob_start();
+    include "dbConnect.php";
+    include "process.php";
+    if (! (isset($_SESSION["first_name"]))) {
+        header("location:auth/login.php");
+        exit;
+    }
 ?>
 <html lang="en">
 
@@ -15,43 +16,45 @@ include("process.php");
     <title>PHP Advance CRUD Application</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="container text-center bg-dark text-light rounded col-lg-12 col-sm-12">
+    <div class="container text-center bg-dark text-light rounded col-lg-12 col-sm-12 mt-3 p-3">
         <h1>Advance CRUD Application</h1>
     </div>
 
     <!-- Alert for any activity -->
     <?php
-    if (!empty($_SESSION)) {
-        // Handel errors
-        if (isset($_SESSION['error'])) {
-            echo '<div class="container alert alert-danger" role="alert">';
-            $errors = $_SESSION['error'];
-            foreach ($errors as $error) {
-                echo $error;
-                echo "<hr>";
+        if (! empty($_SESSION)) {
+            // Handel errors
+            if (isset($_SESSION['error'])) {
+                echo '<div class="container alert alert-danger" role="alert">';
+                $errors = $_SESSION['error'];
+                foreach ($errors as $error) {
+                    echo $error;
+                    echo "<hr>";
+                }
+                echo '</div>';
+                session_destroy();
             }
-            echo '</div>';
-        }
-        // Handel success messages
-        if (isset($_SESSION['success'])) {
-            echo '<div class="container alert alert-success" role="alert">';
-            $successes = $_SESSION['success'];
-            foreach ($successes as $success) {
-                echo $success;
-                echo "<hr>";
+            // Handel success messages
+            if (isset($_SESSION['success'])) {
+                echo '<div class="container alert alert-success" role="alert">';
+                $successes = $_SESSION['success'];
+                foreach ($successes as $success) {
+                    echo $success;
+                    echo "<hr>";
+                }
+                echo '</div>';
+                session_destroy();
             }
-            echo '</div>';
         }
-        session_destroy();
-    }
     ?>
     <div class="container rounded border mb-3 mt-3">
         <form action="" method="post" enctype="multipart/form-data">
             <div class="row">
-                <div class="col">
+                <div class="col-8">
                     <label for="name" class="form-label mt-3">Name</label>
                     <input type="text" class="form-control mb-2" name="name" id="name">
 
@@ -107,12 +110,20 @@ include("process.php");
                     <input type="file" class="form-control" name="pic">
                     <button class="btn btn-success mt-3" type="submit">Save</button>
                 </div>
-                <!-- <div class="col">
-                    <img src="user.png" alt="Your photo displayed here" height="200" class="rounded mx-auto d-block mt-3">
-                    <div class="input-group mt-3">
-                        <input type="file" class="form-control" name="pic">
+                <div class="col">
+                    <div class="d-flex flex-column align-items-center justify-content-center">
+                        <img src="user.jpg" alt="Your photo displayed here" height="100" class="rounded mx-auto d-block mt-5 border">
+
+                        <p class="text-center fs-4 mt-3">Have a good day ! <?php echo $_SESSION["first_name"] . ' ' . $_SESSION["last_name"] ?></p>
+
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                        >
+                            <a href="auth/logout.php">Logout</a>
+                        </button>
                     </div>
-                </div> -->
+                </div>
             </div>
 
         </form>
@@ -134,9 +145,9 @@ include("process.php");
             </thead>
             <tbody class="table-group-divider">
                 <?php
-                $query = "SELECT * FROM `advance_crud` WHERE 1";
-                $data = mysqli_query($conn, $query);
-                while ($row = mysqli_fetch_assoc($data)) {
+                    $query = "SELECT * FROM `advance_crud` WHERE 1";
+                    $data  = mysqli_query($conn, $query);
+                    while ($row = mysqli_fetch_assoc($data)) {
                     ?>
                     <tr>
                         <th scope="row"><?php echo $row['id'] ?></th>
@@ -152,12 +163,11 @@ include("process.php");
                         </td>
                     </tr>
                     <?php
-                }
-                ?>
+                        }
+                    ?>
             </tbody>
         </table>
     </div>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -167,81 +177,93 @@ include("process.php");
 </html>
 
 <?php
-//Handel the insert operation
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    // echo "<pre>";
-    // print_r($_POST);
+    //Handel the insert operation
+    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        // echo "<pre>";
+        // print_r($_POST);
 
-    /**
-     * $errors collects all validation errors, so that we can output the errors which are happened.
-     * trim() method is used to cut any unwanted whitespace or unprintable characters.
-     * null coalescing operator '??' is used to set empty string if the key is not set.
-     */
+        /**
+         * $errors collects all validation errors, so that we can output the errors which are happened.
+         * trim() method is used to cut any unwanted whitespace or unprintable characters.
+         * null coalescing operator '??' is used to set empty string if the key is not set.
+         */
 
-    $errors = [];
-    $name = trim(htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8') ?? '');
-    $gender = htmlspecialchars($_POST['gender'], ENT_QUOTES, 'UTF-8') ?? '';
-    $lang = [];
-    if (isset($_POST['lang']) && is_array($_POST['lang'])) {
-        foreach ($_POST['lang'] as $langs)
-            $lang[] = htmlspecialchars($langs, ENT_QUOTES, 'UTF-8') ?? '';
-    }
+        $errors = [];
+        $name   = trim(htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8') ?? '');
+        $gender = htmlspecialchars($_POST['gender'], ENT_QUOTES, 'UTF-8') ?? '';
+        $lang   = [];
+        if (isset($_POST['lang']) && is_array($_POST['lang'])) {
+            foreach ($_POST['lang'] as $langs) {
+                $lang[] = htmlspecialchars($langs, ENT_QUOTES, 'UTF-8') ?? '';
+            }
 
-    $state = htmlspecialchars($_POST['state'], ENT_QUOTES, 'UTF-8') ?? '';
-    $email = trim(htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8') ?? '');
-    $contact = trim(htmlspecialchars($_POST['contact'], ENT_QUOTES, 'UTF-8') ?? '');
-    $image = [];
-
-    // Validations
-    if (empty($name))
-        $errors[] = "Name is required";
-    if (!in_array($gender, ['male', 'female']))
-        $errors[] = "Invalid gender selected";
-    if (empty($lang))
-        $errors[] = "Select at least one language";
-    if (empty($state) || $state == "Select state")
-        $errors[] = "Select at least one state";
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email";
-    }
-    if (!preg_match('/^[0-9]{10}$/', $contact)) {
-        $errors[] = "Invalid phone number. Must be numeric and 10 digits";
-    }
-
-    // File validation
-    // check if pic is uploaded and no error is there
-    if (isset($_FILES['pic']) && $_FILES['pic']['error'] == UPLOAD_ERR_OK) {
-        $image = $_FILES['pic'];
-
-        // Size must be under 1mb
-        if ($image['size'] > 1048576) {
-            $errors[] = "Image size must be under 1 mb";
         }
-        // Check for image type
-        if (!in_array($image['type'], ['image/jpeg', 'image/png'])) {
-            $errors = "Image type must be jpg, jpeg or png";
-        }
-    } else {
-        $errors[] = "Upload a picture or Error in upload";
-    }
 
-    // Proceed insertion if only there is no error
-    if (empty($errors)) {
-        if (store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image))
-            $_SESSION['success'][] = "Data Stored Successfully";
-        header("location:index.php");
-    } else {
-        // Prints the error messages
-        $_SESSION['error'] = $errors;
-        header("location:index.php");
+        $state   = htmlspecialchars($_POST['state'], ENT_QUOTES, 'UTF-8') ?? '';
+        $email   = trim(htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8') ?? '');
+        $contact = trim(htmlspecialchars($_POST['contact'], ENT_QUOTES, 'UTF-8') ?? '');
+        $image   = [];
+
+        // Validations
+        if (empty($name)) {
+            $errors[] = "Name is required";
+        }
+
+        if (! in_array($gender, ['male', 'female'])) {
+            $errors[] = "Invalid gender selected";
+        }
+
+        if (empty($lang)) {
+            $errors[] = "Select at least one language";
+        }
+
+        if (empty($state) || $state == "Select state") {
+            $errors[] = "Select at least one state";
+        }
+
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Invalid email";
+        }
+        if (! preg_match('/^[0-9]{10}$/', $contact)) {
+            $errors[] = "Invalid phone number. Must be numeric and 10 digits";
+        }
+
+        // File validation
+        // check if pic is uploaded and no error is there
+        if (isset($_FILES['pic']) && $_FILES['pic']['error'] == UPLOAD_ERR_OK) {
+            $image = $_FILES['pic'];
+
+            // Size must be under 1mb
+            if ($image['size'] > 1048576) {
+                $errors[] = "Image size must be under 1 mb";
+            }
+            // Check for image type
+            if (! in_array($image['type'], ['image/jpeg', 'image/png'])) {
+                $errors = "Image type must be jpg, jpeg or png";
+            }
+        } else {
+            $errors[] = "Upload a picture or Error in upload";
+        }
+
+        // Proceed insertion if only there is no error
+        if (empty($errors)) {
+            if (store_data($conn, $name, $gender, $lang, $state, $email, $contact, $image)) {
+                $_SESSION['success'][] = "Data Stored Successfully";
+            }
+
+            header("location:index.php");
+        } else {
+            // Prints the error messages
+            $_SESSION['error'] = $errors;
+            header("location:index.php");
+        }
     }
-}
-//Handel the delete operation
-if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['id'])) {
-    //    print_r($_GET);
-    if (delete_data($conn, $_GET['id'])) {
-        $_SESSION['success'][] = "Data deleted successfully";
-    }
-    header("location:index.php");
+    //Handel the delete operation
+    if ($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['id'])) {
+        //    print_r($_GET);
+        if (delete_data($conn, $_GET['id'])) {
+            $_SESSION['success'][] = "Data deleted successfully";
+        }
+        header("location:index.php");
 }
 ?>
